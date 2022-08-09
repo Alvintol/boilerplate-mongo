@@ -10,44 +10,41 @@ let personSchema = new mongoose.Schema({
 
 let Person = mongoose.model('Person', personSchema);
 
-const createAndSavePerson = function (done) {
+const createAndSavePerson = (done) => {
   let janeFonda = new Person({
     name: "Jane Fonda",
     age: 84,
     favoriteFoods: ["eggs", "fish", "fresh fruit"]
   });
 
-  janeFonda.save(function (err, data) {
+  janeFonda.save((err, data) => {
     if (err) return console.error(err);
     done(null, data)
   });
 };
 
-const createManyPeople = (arrayOfPeople, done) => {
+const createManyPeople = (arrayOfPeople, done) =>
   Person.create(arrayOfPeople, (err, people) => {
     if (err) return console.error(err);
     done(null, people);
   });
-};
 
-const findPeopleByName = (personName, done) => {
+const findPeopleByName = (personName, done) =>
   Person.find({ name: personName }, (err, person) => {
     if (err) return console.error(err);
     done(null, person);
-  })
-};
+  });
 
-const findOneByFood = (food, done) => {
+const findOneByFood = (food, done) =>
   Person.findOne({ favoriteFoods: { "$in": food } }, (err, person) => {
     done(null, person);
-  })
-};
+  });
 
-const findPersonById = (personId, done) => {
+
+const findPersonById = (personId, done) =>
   Person.findOne({ _id: personId }, (err, person) => {
     done(null, person);
-  })
-};
+  });
 
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
@@ -78,9 +75,13 @@ const findAndUpdate = (personName, done) => {
     })
 };
 
-const removeById = (personId, done) => {
-  done(null /*, data*/);
-};
+const removeById = (personId, done) =>
+  Person.findByIdAndRemove(personId, (err, data) => {
+    if (err) return console.error(err);
+
+    done(null, data);
+  });
+
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
