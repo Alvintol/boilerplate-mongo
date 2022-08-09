@@ -11,10 +11,10 @@ let personSchema = new mongoose.Schema({
 let Person = mongoose.model('Person', personSchema);
 
 const createAndSavePerson = function (done) {
-  let janeFonda = new Person({ 
-    name: "Jane Fonda", 
-    age: 84, 
-    favoriteFoods: ["eggs", "fish", "fresh fruit"] 
+  let janeFonda = new Person({
+    name: "Jane Fonda",
+    age: 84,
+    favoriteFoods: ["eggs", "fish", "fresh fruit"]
   });
 
   janeFonda.save(function (err, data) {
@@ -38,28 +38,28 @@ const findPeopleByName = (personName, done) => {
 };
 
 const findOneByFood = (food, done) => {
-  Person.findOne({favoriteFoods: {"$in": food}}, (err, person)=>{ 
-  done(null, person);
+  Person.findOne({ favoriteFoods: { "$in": food } }, (err, person) => {
+    done(null, person);
   })
 };
 
 const findPersonById = (personId, done) => {
-  Person.findOne({_id: personId}, (err, person)=>{ 
-  done(null, person);
+  Person.findOne({ _id: personId }, (err, person) => {
+    done(null, person);
   })
 };
 
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
-  
+
   Person.findById(personId, (err, person) => {
     if (err) return console.error(err);
 
     person.favoriteFoods.push(foodToAdd);
 
     person.save((err, updatedPerson) => {
-    if (err) return console.error(err);
-    done(null, updatedPerson);
+      if (err) return console.error(err);
+      done(null, updatedPerson);
     })
   })
 };
@@ -67,7 +67,15 @@ const findEditThenSave = (personId, done) => {
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
 
-  done(null /*, data*/);
+  Person.findOneAndUpdate(
+    { name: personName },
+    { age: ageToSet },
+    { new: true },
+    (err, person) => {
+
+      if (err) return console.error(err);
+      done(null, person);
+    })
 };
 
 const removeById = (personId, done) => {
